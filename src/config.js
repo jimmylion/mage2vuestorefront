@@ -1,53 +1,77 @@
-const _slugify = require('./helpers/slugify')
+const _slugify = require("./helpers/slugify");
 
 module.exports = {
-
   seo: {
     useUrlDispatcher: JSON.parse(process.env.SEO_USE_URL_DISPATCHER || true),
-    productUrlPathMapper: (product) => {
-      let destPath = ''
+    productUrlPathMapper: product => {
+      let destPath = "";
       if (product.category && product.category.length > 0) {
         for (let i = 0; i < product.category.length; i++) {
-          if (typeof product.category[i].name !== 'undefined') {
-            const firstValidCat = product.category[i]
-            destPath = (firstValidCat.path ? (firstValidCat.path) : _slugify(firstValidCat.name)) + '/' + (product.slug ? product.slug : _slugify(product.name + '-' + product.id))
-            break
+          if (typeof product.category[i].name !== "undefined") {
+            const firstValidCat = product.category[i];
+            destPath =
+              (firstValidCat.path
+                ? firstValidCat.path
+                : _slugify(firstValidCat.name)) +
+              "/" +
+              (product.slug
+                ? product.slug
+                : _slugify(product.name + "-" + product.id));
+            break;
           }
         }
       }
-      if (destPath === '') {
-        destPath = (product.slug ? product.slug : _slugify(product.name + '-' + product.id))
+      if (destPath === "") {
+        destPath = product.slug
+          ? product.slug
+          : _slugify(product.name + "-" + product.id);
       }
-      destPath += '.html'
-      console.log('Dest. product path = ', destPath)
-      return destPath
+      destPath += ".html";
+      console.log("Dest. product path = ", destPath);
+      return destPath;
     },
-    categoryUrlPathMapper: (category) => {
-      const destSlug = (category.url_path ? category.url_path + '/': '') + category.url_key
-      console.log('Dest. cat path = ', destSlug)
-      return destSlug
-    },
+    categoryUrlPathMapper: category => {
+      const destSlug =
+        (category.url_path ? category.url_path + "/" : "") + category.url_key;
+      console.log("Dest. cat path = ", destSlug);
+      return destSlug;
+    }
   },
 
   magento: {
-    url: process.env.MAGENTO_URL || 'http://magento2.demo-1.divante.pl/rest/',
-    consumerKey: process.env.MAGENTO_CONSUMER_KEY || 'alva6h6hku9qxrpfe02c2jalopx7od1q',
-    consumerSecret: process.env.MAGENTO_CONSUMER_SECRET || '9tgfpgoojlx9tfy21b8kw7ssfu2aynpm',
-    accessToken: process.env.MAGENTO_ACCESS_TOKEN || 'rw5w0si9imbu45h3m9hkyrfr4gjina8q',
-    accessTokenSecret: process.env.MAGENTO_ACCESS_TOKEN_SECRET || '00y9dl4vpxgcef3gn5mntbxtylowjcc9',
+    url: process.env.MAGENTO_URL || "https://new.jimmylion.com/rest/",
+    consumerKey:
+      process.env.MAGENTO_CONSUMER_KEY || "8xslf4o08wfsr3ixsh0iwa8yb9hgkhh6",
+    consumerSecret:
+      process.env.MAGENTO_CONSUMER_SECRET || "kybgquypfm70sch9kkwb1tgp7fw7amsj",
+    accessToken:
+      process.env.MAGENTO_ACCESS_TOKEN || "c04rxl5booo2p88dh0s15nrd1j7lvtkn",
+    accessTokenSecret:
+      process.env.MAGENTO_ACCESS_TOKEN_SECRET ||
+      "at49p619bk7muspk6ir46gadhd550g8e",
     storeId: process.env.MAGENTO_STORE_ID || 1,
-    currencyCode: process.env.MAGENTO_CURRENCY_CODE || 'USD',
-    msi: { enabled: process.env.MAGENTO_MSI_ENABLED || false, stockId: process.env.MAGENTO_MSI_STOCK_ID || 1 }
+    currencyCode: process.env.MAGENTO_CURRENCY_CODE || "EUR",
+    msi: {
+      enabled: process.env.MAGENTO_MSI_ENABLED || false,
+      stockId: process.env.MAGENTO_MSI_STOCK_ID || 1
+    }
   },
 
   vuestorefront: {
-    invalidateCache: JSON.parse(typeof process.env.VS_INVALIDATE_CACHE === 'undefined' ? false : process.env.VS_INVALIDATE_CACHE),
-    invalidateCacheUrl: process.env.VS_INVALIDATE_CACHE_URL || 'http://localhost:3000/invalidate?key=aeSu7aip&tag='
+    invalidateCache: JSON.parse(
+      typeof process.env.VS_INVALIDATE_CACHE === "undefined"
+        ? false
+        : process.env.VS_INVALIDATE_CACHE
+    ),
+    invalidateCacheUrl:
+      process.env.VS_INVALIDATE_CACHE_URL ||
+      "http://localhost:3000/invalidate?key=aeSu7aip&tag="
   },
 
   product: {
-    expandConfigurableFilters: ['manufacturer'],
-    synchronizeCatalogSpecialPrices: process.env.PRODUCTS_SPECIAL_PRICES || false,
+    expandConfigurableFilters: ["manufacturer"],
+    synchronizeCatalogSpecialPrices:
+      process.env.PRODUCTS_SPECIAL_PRICES || false,
     renderCatalogRegularPrices: process.env.PRODUCTS_RENDER_PRICES || false,
     excludeDisabledProducts: process.env.PRODUCTS_EXCLUDE_DISABLED || false
   },
@@ -55,17 +79,17 @@ module.exports = {
   kue: {}, // default KUE config works on local redis instance. See KUE docs for non standard redis connections
 
   db: {
-    driver: 'elasticsearch',
-    url: process.env.DATABASE_URL || 'http://localhost:9200',
-    indexName: process.env.INDEX_NAME || 'vue_storefront_catalog'
+    driver: "elasticsearch",
+    url: process.env.DATABASE_URL || "http://localhost:9200",
+    indexName: process.env.INDEX_NAME || "vue_storefront_catalog_eu"
   },
 
   elasticsearch: {
-    apiVersion: process.env.ELASTICSEARCH_API_VERSION || '5.6'
+    apiVersion: process.env.ELASTICSEARCH_API_VERSION || "5.6"
   },
 
   redis: {
-    host: process.env.REDIS_HOST || '127.0.0.1',
+    host: process.env.REDIS_HOST || "127.0.0.1",
     port: process.env.REDIS_PORT || 6379,
     auth: process.env.REDIS_AUTH || false,
     db: process.env.REDIS_DB || 0
@@ -77,5 +101,5 @@ module.exports = {
       session: false
     }
   }
+};
 
-}
